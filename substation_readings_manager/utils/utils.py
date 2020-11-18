@@ -37,7 +37,7 @@ def get_last_month_date() -> date:
     return one_month_ago.date()
 
 
-def get_stringrecordid_to_name_dict() -> Dict[str, str]:
+def get_string_record_id_to_name_dict() -> Dict[str, str]:
     """ Queries the database and returns a dictionary(mapping) of StringRecordID to name
 
     Returns:
@@ -50,19 +50,12 @@ def get_stringrecordid_to_name_dict() -> Dict[str, str]:
     query = 'SELECT StringRecordID, name FROM BEEnterprise.dbo.strings;'
     ms_cursor.execute(query)
 
-    stringrecordid_name_dict = {}
+    string_record_id_name_dict = {}
 
     for row in ms_cursor:
-        stringrecordid_name_dict.update({row[0]: row[1]})
+        string_record_id_name_dict.update({row[0]: row[1]})
 
-    return stringrecordid_name_dict
-
-
-
-
-
-
-
+    return string_record_id_name_dict
 
 def get_all_days_between_two_dates(s_date: date, e_date: date) -> List[date]:
     """This function returns a list of days in between two days, inclusive of start and end
@@ -130,21 +123,20 @@ def get_date_range_one_month(day_of_month: date = get_last_month_date()) -> Tupl
 #
 #
 
-def query_database_cell_values(string_id: int, reading_type: int, cell_number: int,
-                               day: date = get_last_month_date()) -> Tuple[List, int, int, int, date]:
+def query_database_cell_values(string_record_id: str, reading_type: int, cell_number: int,
+                               day: date = get_last_month_date()) -> List:
     """ This function queries the database for the readings for a specific StringID,
     reading type and cell number
 
     Args:
-        string_id (int): The StringRecordID of the substation
+        string_record_id (str): The StringRecordID of the substation
         reading_type (int): The Reading Type being queried
         cell_number (int): The Cell Number being queried
         day (date, optional): Any day within the month that will be queried. Functions use this date
         to return the first of the month. Defaults to get_last_month_date().
 
     Returns:
-        Tuple[List, int, int, int, date]: (reading_list, string_id, reading_type, cell_number, day)
-        reading_list is the list of readings from the database.
+        reading_list (List): reading_list is the list of readings from the database.
     """
 
     ms_conn = connect_to_database()
@@ -155,7 +147,7 @@ def query_database_cell_values(string_id: int, reading_type: int, cell_number: i
 
     query = F"""SELECT CellReadingsRecordID, ReadingDateTime,
             ReadingValue FROM BEEnterpriseHistory.dbo.CellReadingsHistory where
-            StringRecordID = {string_id} and
+            StringRecordID = {string_record_id} and
             ReadingTypeRecordID = {reading_type} and cellNumber = {cell_number} and
             ReadingDateTime between '{first_day}' and '{last_day}'"""
 
@@ -166,12 +158,12 @@ def query_database_cell_values(string_id: int, reading_type: int, cell_number: i
     for row in ms_cursor:
         reading_list.append(row[1].date())
 
-    return (reading_list, reading_type, day)
+    return reading_list
 
-def check_results_of_query(reading_list: List[date],
-        reading_type: int,  day: date) -> bool:
+def check_database_values(string_record_id: str, reading_list: List[date],
+        reading_type: int, cell_number: int, day: date) -> bool:
     """This function checks the results of query_database_cell_values to see if the correct
-    number of readings is in the database for the specific reading type and string_id.
+    number of readings is in the database for the specific reading type and string_record_id.
 
     Returns:
         bool(not_enough_readings) : True if not enough, False if enough readings
@@ -179,6 +171,8 @@ def check_results_of_query(reading_list: List[date],
 
     reading_type_dict = {6: "Cell Impedance", 8: "Cell Voltage",
                          9: "Strap Impedance", 10: "Intertier Impedance"}
+
+    reading_list = query_database_cell_values(string_record_id, reading_type, cell_number)
 
     if (reading_type_dict.get(reading_type) == "Cell Impedance" or
         reading_type_dict.get(reading_type) == "Strap Impedance" or
@@ -204,10 +198,10 @@ def check_results_of_query(reading_list: List[date],
 
         return set(query_date_list) == set(days_between_two_dates)
 
-def check_substation(stringrecordid: int,
+def check_substation(string_record_id: int,
         reading_type: int,  day: date) -> bool:
 
-#What do I want this function to tell me? I want given a (stringrecordid, reading_type, and a dict of stuff) ,
+#What do I want this function to tell me? I want given a (string_record_id, reading_type, and a dict of stuff) ,
 # return a (bool, number it has, number its supposed to have)
 # Data Structure
 #
@@ -245,7 +239,7 @@ def get_intertier_cells(string_record_id: int)->Dict[int,List[int]]:
     """
 
     Returns:
-        Dict[str,List[str]]: Dictionary that has stringrecordid as the key
+        Dict[str,List[str]]: Dictionary that has string_record_id as the key
         and a list of the cells that are intertier cells
     """
 
@@ -266,31 +260,35 @@ def get_intertier_cells(string_record_id: int)->Dict[int,List[int]]:
 
     return intertier_cell_list
 
-def workbook_name(day: date = get_last_month_date()):
-    """[summary]
+def workbook_name(day: date = get_last_month_date())->str:
+    """This function returns a workbook name given a date
 
     Args:
-        day (date): [description]
+        day (date): Date that the report is being run on
 
     Returns:
-        string: [description]
+        string: Name in the format "October 2020 MPC Battery Report.xlsx"
     """
 
     month = str(calendar.month_name[day.month])
 
     year = str(day.year)
-    workbook_name = month + year + ' MPC Battery Report' + '.xlsx'
+    workbook_name = month + " " +  year + ' MPC Battery Report' + '.xlsx'
 
     return workbook_name
 
-def print_status(name, reading_type, cell_number):
-    """[summary]
+def program_status(name: str, reading_type: str, cell_number: int)->str:
+    """This functions prints the current value that the program is on
 
     Args:
-        name ([type]): [description]
-        reading_type ([type]): [description]
-        cell_number ([type]): [description]
+        name (str): Name of the substation
+        reading_type (str): Reading type that the substation is on
+        cell_number (int): What Cell Number of the substation that the program is on
+
+    Returns:
+        string: "Substation x reading_type x Cell Number: x"
     """
-    print("Substation ", name, end=" ")
-    print(reading_type, end=" ")
-    print("Cell Number: ", cell_number)
+
+    status = "Substation " + name + " " + reading_type + "Cell:" + cell_number
+
+    return status

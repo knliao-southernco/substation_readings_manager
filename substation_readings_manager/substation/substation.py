@@ -9,7 +9,6 @@ class Substation:
 
         write_bool,readings,needed_readings = self.check_intertier_impedance()
 
-        #Also writes to the excel sheet
     def check_temperature(self):
         pass
     def check_voltage(self):

@@ -16,7 +16,7 @@ def main():
 
     wb = ExcelFile()
 
-    x = df.get_stringrecordid_to_name_dict()
+    x = df.get_string_record_id_to_name_dict()
 
     for id in x:
         z = Substation(y, df.get_intertier_cells(y) )

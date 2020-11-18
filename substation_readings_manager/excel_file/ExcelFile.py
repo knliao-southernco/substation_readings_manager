@@ -1,8 +1,7 @@
-"""[summary]
+"""This class is responsible for creating the excel sheet and writing to it.
 """
 
 import xlsxwriter
-
 
 class ExcelFile:
     """[summary]
@@ -10,13 +9,16 @@ class ExcelFile:
     def __init__(self, workbook_name):
         self.workbook = xlsxwriter.Workbook(workbook_name)
 
+        self.key = self.workbook.add_worksheet('Key')
+        self.overall = self.overall.add_worksheet('Overall')
+
         self.cell_impedance = self.workbook.add_worksheet('Cell Impedance')
         self.cell_voltage = self.workbook.add_worksheet('Cell Voltage')
         self.strap_impedance = self.workbook.add_worksheet('Strap Impedance')
         self.intertier_impedance = self.workbook.add_worksheet('Intertier Impedance')
 
         self.cell_impedance_row = 1
-        self.cell_voltage_row = 10
+        self.cell_voltage_row = 1
         self.strap_impedance_row = 1
         self.intertier_impedance_row = 1
 

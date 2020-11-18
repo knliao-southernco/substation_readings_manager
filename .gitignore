@@ -1,5 +1,5 @@
 /.vscode
 .csv
 .xlsx
-TEST.py
-__pycache__/ 
+email_manager.py
+__pycache__/
