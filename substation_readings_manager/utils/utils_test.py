@@ -5,7 +5,7 @@ import pyodbc
 
 import utils as df
 
-class LastMonthDate(unittest.testCase):
+class LastMonthDate(unittest.TestCase):
 
     def test_connect_to_database(self):
         self.assertIs(type(df.connect_to_database()), pyodbc.Connection)

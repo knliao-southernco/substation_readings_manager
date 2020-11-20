@@ -19,6 +19,6 @@ def main():
     x = df.get_string_record_id_to_name_dict()
 
     for id in x:
-        z = Substation(y, df.get_intertier_cells(y) )
+        z = Substation(y, df.get_intertier_cells(y))
 
 
