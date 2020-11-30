@@ -6,10 +6,10 @@ import calendar
 
 from openpyxl import Workbook
 
-import src.utils as df
-import src.email_manager.email_lib as el
-from src.substation import Substation
-from src.worksheet import Worksheet
+import substation_readings_manager.utils as df
+import substation_readings_manager.email_manager.email_lib as el
+from substation_readings_manager.substation import Substation
+from substation_readings_manager.worksheet import Worksheet
 
 
 def main():

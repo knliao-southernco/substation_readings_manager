@@ -10,7 +10,7 @@ class ExcelFile:
         self.workbook = xlsxwriter.Workbook(workbook_name)
 
         self.key = self.workbook.add_worksheet('Key')
-        self.overall = self.overall.add_worksheet('Overall')
+        self.overall = self.workbook.add_worksheet('Overall')
 
         self.cell_impedance = self.workbook.add_worksheet('Cell Impedance')
         self.cell_voltage = self.workbook.add_worksheet('Cell Voltage')

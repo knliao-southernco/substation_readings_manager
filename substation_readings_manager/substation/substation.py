@@ -1,4 +1,4 @@
-import src.utils
+import substation_readings_manager.utils
 
 class Substation:
     def __init__(self, string_record_id, intertier_cells):

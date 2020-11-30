@@ -289,6 +289,6 @@ def program_status(name: str, reading_type: str, cell_number: int)->str:
         string: "Substation x reading_type x Cell Number: x"
     """
 
-    status = "Substation " + name + " " + reading_type + "Cell:" + cell_number
+    status = "Substation " + name + " " + reading_type + "Cell:" + str(cell_number)
 
     return status
