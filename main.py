@@ -1,3 +1,3 @@
-from src.app import main
+from substation_readings_manager.app_copy import main
 
 main() 

@@ -5,9 +5,9 @@ import calendar
 
 import xlsxwriter
 
-import src.utils.utils as df
-import src.email_manager.email_lib as el
-from src.excel_file.ExcelFile import ExcelFile
+import substation_readings_manager.utils.utils as df
+import substation_readings_manager.email_manager.email_lib as el
+from substation_readings_manager.excel_file.excel_file import ExcelFile
 
 def main():
 

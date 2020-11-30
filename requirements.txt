@@ -4,6 +4,6 @@ typing
 openpyxl 
 cx_Oracle
 python-dateutil
-
+ConfigParser
 
 

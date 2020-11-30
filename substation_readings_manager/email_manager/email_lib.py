@@ -1,5 +1,5 @@
-import src.email_manager.email_manager as em
-import ConfigParser
+import substation_readings_manager.email_manager.email_manager as em
+import configparser
 
 import json
 

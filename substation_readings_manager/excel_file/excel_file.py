@@ -3,9 +3,10 @@
 
 import xlsxwriter
 
+from substation_readings_manager.substation.substation import Substation
+
 class ExcelFile:
-    """[summary]
-    """
+
     def __init__(self, workbook_name):
         self.workbook = xlsxwriter.Workbook(workbook_name)
 
@@ -39,8 +40,7 @@ class ExcelFile:
         self.workbook.close()
 
 
-    class KeySheet:
+    def analyze_substation(self, substation: Substation):
 
-
-    class OverallSheet:
+        if len(substation.cell_voltage_readings.readings < 30):
 
